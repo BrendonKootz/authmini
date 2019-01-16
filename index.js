@@ -34,7 +34,10 @@ server.post('/api/login', (req, res) => {
     const bodyUser = req.body;
     db('users').where('username', bodyUser.username)
     .then(users => {
-        if (users.length && user.password === users[0].password){
+        // Show some data
+        console.log("Body user", bodyUser);
+        console.log("DB user", users[0]);
+        if (users.length && bcrypt.compareSync(bodyUser.password, users[0].password)){
             res.json({info: "Correct info bro"});
         } else {
             res.status(404).json({err: "Bad info"});
