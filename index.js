@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrpytjs');
-const db = require('./database/dbConfig.js');
+const db = require('./database/dbHelpers.js');
 
 const server = express();
 
@@ -16,9 +16,9 @@ server.get('/', (req, res) => {
 server.post('/api/register', (req, res) => {
     // Grab req.body for user data
     const user = req.body;
-    user.password = bcrpyt.hashSync(user.password);
+    user.password = bcrpyt.hashSync(user.password, 14);
     // Use knex to insert into DB
-    db('users').insert(user)
+    db.insert('users')
         .then(id => {
             res.status(201).send({id: ids[0]});
         })
@@ -32,7 +32,7 @@ server.post('/api/login', (req, res) => {
     // Verify username & password exists AND match
     // Never set a raw password in a data base
     const bodyUser = req.body;
-    db('users').where('username', bodyUser.username)
+    db.findByUsername(bodyUser.username)
     .then(users => {
         // Show some data
         console.log("Body user", bodyUser);

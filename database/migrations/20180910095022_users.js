@@ -1,5 +1,6 @@
 exports.up = function(knex) {
   return knex.schema.createTable('users', users => {
+    // Forever use this as primary key unless told otherwise
     users.increments();
 
     users
