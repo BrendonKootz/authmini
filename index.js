@@ -23,6 +23,7 @@ server.get('/', (req, res) => {
   res.send('Its Alive!');
 });
 
+// Register Endpoint // 
 server.post('/api/register', (req, res) => {
     // Grab req.body for user data
     const user = req.body;
@@ -39,6 +40,7 @@ server.post('/api/register', (req, res) => {
     
 });
 
+// Login Endpoint //
 server.post('/api/login', (req, res) => {
     // Verify username & password exists AND match
     // Never set a raw password in a data base
@@ -48,6 +50,7 @@ server.post('/api/login', (req, res) => {
         // Show some data
         console.log("Body user", bodyUser);
         console.log("DB user", users[0]);
+        // 
         if (users.length && bcrypt.compareSync(bodyUser.password, users[0].password)){
             res.json({info: "Correct info bro"});
         } else {
@@ -65,7 +68,7 @@ server.get('/api/users', (req, res) => {
     if(req.session && req.session.userId){
         db.findUsers()
             .then(users => {
-
+                res.json(users);
         })
         .catch(err => {
             res.status(500).send(err);
