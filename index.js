@@ -62,6 +62,17 @@ server.post('/api/login', (req, res) => {
      });
 });
 
+// Logout Endpoint // 
+server.post('api/logout', (req,res) => {
+    req.session.destroy(err => {
+        if(err){
+            res.status(500).send("Failed to log out");
+        } else {
+            res.send("Logout Successful");
+        }
+    });
+});
+
 // protect this route, only authenticated users should see it
 server.get('/api/users', (req, res) => {
     console.log('session', req.session);
