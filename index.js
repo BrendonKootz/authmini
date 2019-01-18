@@ -2,12 +2,22 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrpytjs');
 const db = require('./database/dbHelpers.js');
-
+const session = require('express-session');
 const server = express();
 
 // This line needed for POST requests
 server.use(express.json());
 server.use(cors());
+server.use(session({
+    name: 'notsession',
+    secret: 'lmao',
+    cookie: (
+        maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
+    ),
+    httpOnly: true, // Js get off my cookies
+    resave: false,
+    saveUninitialized: false,
+}));
 
 server.get('/', (req, res) => {
   res.send('Its Alive!');
@@ -16,7 +26,7 @@ server.get('/', (req, res) => {
 server.post('/api/register', (req, res) => {
     // Grab req.body for user data
     const user = req.body;
-    user.password = bcrpyt.hashSync(user.password, 14);
+    user.password = bcrpyt.hashSync(user.password, 10);
     // Use knex to insert into DB
     db.insert('users')
         .then(id => {
