@@ -8,5 +8,8 @@ module.exports = {
     },
     findByUsername: (username) => {
         return db.('users').where('username', username);
+    },
+    findUsers: () => {
+        return db('users').select('id','username');
     }
 };

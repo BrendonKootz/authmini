@@ -26,6 +26,7 @@ server.get('/', (req, res) => {
 server.post('/api/register', (req, res) => {
     // Grab req.body for user data
     const user = req.body;
+    console.log(req.session);
     user.password = bcrpyt.hashSync(user.password, 10);
     // Use knex to insert into DB
     db.insert('users')
@@ -60,12 +61,18 @@ server.post('/api/login', (req, res) => {
 
 // protect this route, only authenticated users should see it
 server.get('/api/users', (req, res) => {
-  db('users')
-    .select('id', 'username')
-    .then(users => {
-      res.json(users);
-    })
-    .catch(err => res.send(err));
+    console.log('session', req.session);
+    if(req.session && req.session.userId){
+        db.findUsers()
+            .then(users => {
+
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        })
+    } else {
+        res.status(400).send('ACCESS DENIED');
+    }
 });
 
 server.listen(3300, () => console.log('\nrunning on port 3300\n'));
